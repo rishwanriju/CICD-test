@@ -1,0 +1,33 @@
+#  Template NodeJS build
+
+#  This template allows you to validate your NodeJS code.
+#  The workflow allows running tests and code linting on the default branch.
+
+image: node:16
+
+pipelines:
+  default:
+    - step:
+        name: Install dependencies
+        caches:
+          - node
+        script:
+          - npm install
+    - step:
+        name: Test and build
+        caches:
+          - node
+        script:
+          - npm test
+          - npm run build
+        artifacts:
+          - build/**
+    - step:
+        # set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as environment variables
+        name: Deploy to S3
+        deployment: test   # set to test, staging or production
+        trigger: manual  # uncomment to have a manual step
+        image: atlassian/pipelines-awscli
+        script:
+          - aws s3 sync --delete ./build s3://$S3_BUCKET_UI
+          - aws s3 cp --cache-control max-age=0 ./build/service-worker.js s3://$S3_BUCKET_UI
