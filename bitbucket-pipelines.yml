@@ -30,4 +30,4 @@ pipelines:
         image: atlassian/pipelines-awscli
         script:
           - aws s3 sync --delete ./build s3://$S3_BUCKET_UI
-          - aws s3 cp --cache-control max-age=0 ./build/* s3://$S3_BUCKET_UI --recursive
+          - aws s3 cp --cache-control max-age=0 ./build/ s3://$S3_BUCKET_UI --recursive
