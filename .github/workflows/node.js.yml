@@ -29,10 +29,15 @@ jobs:
     - run: unset ci
     - run: npm install
     - run: npm run build 
-    - run: ls
     
+    
+    - name: Tar files
+    - run: tar -cvf build.tar ./build
+    - run: ls
+      
+      
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.0.0
       with:
         name : react_app
-        path : ./build 
+        path : ./build.tar 
